@@ -53,14 +53,14 @@ void Game::MainLoop()
 
 void Game::Update()
 {
-
+	cam->Update(mTime.timestep);
 }
 
 void Game::Render(double alpha)
 {
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
-	tri->draw();
+	tri->draw(mTime.time);
 	mWindow->display();
 }
 
@@ -95,5 +95,7 @@ void Game::Initialize() {
 	printf("Testing OpenGL...\n");
 	printf("%u\n", vertexBuffer);
 	glViewport(0, 0, 800, 600);
+	cam = new Camera();
 	tri = new Triangle();
+	tri->cam = cam;
 }

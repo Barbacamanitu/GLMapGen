@@ -4,6 +4,7 @@
 #include <SFML\Graphics.hpp>
 #include <memory>
 #include "..\Experiments\Triangle.h"
+#include "Camera.h"
 
 
 struct TimeInfo {
@@ -36,5 +37,7 @@ private:
 	sf::Clock mClock;
 	TimeInfo mTime;
 	Triangle* tri;
+	Camera* cam;
+
 };
 

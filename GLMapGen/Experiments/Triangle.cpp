@@ -2,65 +2,40 @@
 #include "Triangle.h"
 #include "../Utility/FileIO.h"
 
+
 Triangle::Triangle()
 {
-	GLfloat vertices[] = {
-		0.0f,  0.5f, // Vertex 1 (X, Y)
-		0.5f, -0.5f, // Vertex 2 (X, Y)
-		-0.5f, -0.5f  // Vertex 3 (X, Y)
+	float vertices[] = {
+		-0.5f,  0.5f, 1.0f, 0.0f, 0.0f, // Top-left
+		0.5f,  0.5f, 0.0f, 1.0f, 0.0f, // Top-right
+		0.5f, -0.5f, 0.0f, 0.0f, 1.0f, // Bottom-right
+		-0.5f, -0.5f, 1.0f, 1.0f, 1.0f  // Bottom-left
 	};
-
+	GLuint elements[] = {
+		0, 1, 2,
+		2, 3, 0
+	};
 	glGenVertexArrays(1, &vao);
 	glGenBuffers(1, &vbo); // Generate 1 buffer
 
+	GLuint ebo;
+	glGenBuffers(1, &ebo);
 
+
+	
 	glBindVertexArray(vao);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	
 
-	//Shaders
-	std::string vertexSource = FileIO::ReadTextFile("Shaders/shader.vertex");
-	std::string fragmentSource = FileIO::ReadTextFile("Shaders/shader.frag");
-	GLchar* vSource = (GLchar*)vertexSource.c_str();
-	GLchar* fSource = (GLchar*)fragmentSource.c_str();
+	prog = ShaderProgram::createShader("Shaders/shader.fragment", "Shaders/shader.vertex");
+	prog.Use();
+	prog.AddUniform("trans");
+	prog.AddVertexAttribute(VertexAttribute("position",AttributeType::Float,2,5*(sizeof(float)),0));
+	prog.AddVertexAttribute(VertexAttribute("color", AttributeType::Float, 3, 5 * (sizeof(float)), 2 * (sizeof(float))));
 
-	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertexShader, 1, &vSource, NULL);
-	glCompileShader(vertexShader);
-	GLint status;
-	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &status);
-	if (status != GL_TRUE) {
-		char buffer[512];
-		glGetShaderInfoLog(vertexShader, 512, NULL, buffer);
-	}
-	GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragmentShader, 1, &fSource, NULL);
-	glCompileShader(fragmentShader);
-	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &status);
-	if (status != GL_TRUE) {
-		char buffer[512];
-		glGetShaderInfoLog(vertexShader, 512, NULL, buffer);
-	}
-	shaderProgram = glCreateProgram();
-	glAttachShader(shaderProgram, vertexShader);
-	glAttachShader(shaderProgram, fragmentShader);
-	glBindFragDataLocation(shaderProgram, 0, "outColor");
-	glLinkProgram(shaderProgram);
-
-
-	glGetShaderiv(shaderProgram, GL_LINK_STATUS, &status);
-	if (status != GL_TRUE) {
-		char buffer[512];
-		glGetShaderInfoLog(shaderProgram, 512, NULL, buffer);
-	}
-
-
-	glUseProgram(shaderProgram);
-// 	char buffer[512];
-// 	glGetProgramInfoLog(shaderProgram, 512, nullptr, buffer);
-	GLint posAttrib = glGetAttribLocation(shaderProgram, "position");
-	glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0);
-	glEnableVertexAttribArray(posAttrib);
 	
 }
 
@@ -69,7 +44,16 @@ Triangle::~Triangle()
 {
 }
 
-void Triangle::draw()
+void Triangle::draw(double time)
 {
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	//glUniform3f(prog.getUniformLocation("triangleColor"), (sin(time * 4.0f) + 1.0f) / 2.0f, 0.0f, 0.0f);
+	//glDrawArrays(GL_TRIANGLES, 0, 3);
+	trans = glm::rotate(
+		glm::mat4(),
+		(float)(glm::radians(180.0f) * time),
+		glm::vec3(0.0f, 0.0f, 1.0f)
+		);
+	glm::mat4 mat = cam->proj * cam->view * trans;
+	glUniformMatrix4fv(prog.getUniformLocation("trans"), 1, GL_FALSE, glm::value_ptr(mat));
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }

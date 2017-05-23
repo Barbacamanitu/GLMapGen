@@ -104,7 +104,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>SFML_STATIC;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(GLEW_ROOT)\include;$(SFML_ROOT)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(GLEW_ROOT)\include;$(SFML_ROOT)\include;D:\Dev\Lib\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -151,14 +151,19 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Camera.h" />
     <ClInclude Include="Engine\Game.h" />
+    <ClInclude Include="Engine\GLHelper\ShaderOptions.h" />
+    <ClInclude Include="Engine\GLHelper\ShaderProgram.h" />
     <ClInclude Include="Experiments\Triangle.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Utility\FileIO.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Camera.cpp" />
     <ClCompile Include="Engine\Game.cpp" />
+    <ClCompile Include="Engine\GLHelper\ShaderProgram.cpp" />
     <ClCompile Include="Experiments\Triangle.cpp" />
     <ClCompile Include="GLMapGen.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -170,7 +175,7 @@
     <ClCompile Include="Utility\FileIO.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\shader.frag" />
+    <None Include="Shaders\shader.fragment" />
     <None Include="Shaders\shader.vertex" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
