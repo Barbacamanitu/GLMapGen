@@ -73,6 +73,12 @@ void Game::HandleEvents()
 				End();
 			}
 		}
+
+
+		//Close game when x pressedd
+		if (mEvent.type == sf::Event::EventType::Closed) {
+			End();
+		}
 	}
 }
 
