@@ -1,0 +1,9 @@
+#version 150
+
+out vec4 outColor;
+void main()
+{
+	float intensity = gl_FragCoord.z / gl_FragCoord.w;
+	vec3 c = vec3(intensity/500.f,0.0f,1.0f);
+    outColor = vec4(c, 1.0);
+}

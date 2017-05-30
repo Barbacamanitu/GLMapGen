@@ -1,6 +1,10 @@
 #include "stdafx.h"
 #include "Game.h"
-
+#include <iostream>
+#include <chrono>
+#include "Commands\CloseGameCommand.h"
+#include <memory>
+#include <sstream>
 Game::Game()
 {
 	mTime.timestep = 1.0 / 60.0;
@@ -13,95 +17,126 @@ Game::~Game()
 
 void Game::Start()
 {
-	mClock.restart();
-	mTime.newTime = mClock.getElapsedTime().asMicroseconds() / (1000.0 * 1000.0);
+	mTime.newTime = SClock::now();
 	mTime.currentTime = mTime.newTime;
 	mTime.time = 0;
 
-	while (mWindow->isOpen()) {
-		HandleEvents();
-		MainLoop();
-	}
+	MainLoop();
+
+	
 }
 
 void Game::End()
 {
-	mWindow->close();
+	glfwSetWindowShouldClose(mWindow, GLFW_TRUE);
+}
+
+Input* Game::getInput()
+{
+	return mInput.get();
 }
 
 void Game::MainLoop()
 {
-	//Handle timing and calls to update/render
-	mTime.newTime = mClock.getElapsedTime().asMicroseconds() / (1000.0 * 1000.0);
-	mTime.frameTime = mTime.newTime - mTime.currentTime;
-	if (mTime.frameTime > 0.25)
-		mTime.frameTime = 0.25;
-	mTime.currentTime = mTime.newTime;
+	double t = 0.0;
+	double dt = 1.0/60.0;
 
-	mTime.accumulator += mTime.frameTime;
+	SClock clock;
+	TimePoint currentTime = SClock::now();
+	double accumulator = 0.0;
 
-	while (mTime.accumulator >= mTime.timestep)
-	{
-		Update();
-		mTime.time += mTime.timestep;
-		mTime.accumulator -= mTime.timestep;
+	while (!glfwWindowShouldClose(mWindow)) {
+		HandleEvents();
+
+
+		TimePoint newTime = SClock::now();
+		double frameTime = std::chrono::duration_cast<std::chrono::microseconds>(newTime - currentTime).count() * 0.000001;
+		if (frameTime > 0.25)
+			frameTime = 0.25;
+		currentTime = newTime;
+
+		accumulator += frameTime;
+
+		while (accumulator >= dt)
+		{
+			Update(t,dt);
+			t += dt;
+			accumulator -= dt;
+		}
+		const double alpha = accumulator / dt;
+		Render(alpha);
 	}
 
-	mTime.alpha = mTime.accumulator / mTime.timestep;
-	Render(mTime.alpha);
 }
 
-void Game::Update()
+void Game::Update(double time, double delta)
 {
-	cam->Update(mTime.timestep);
+	cam->Update(delta);
+	mInput->update(delta);
 }
 
 void Game::Render(double alpha)
 {
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
-	tri->draw(mTime.time);
-	mWindow->display();
+	//tri->draw(mTime.time);
+	wireframe->Render();
+	glm::vec2 mousePos = getInput()->getMouse()->getMouseDelta();
+	std::stringstream pos;
+	pos << mousePos.x << "," << mousePos.y;
+	mFontLoader->drawText("consola", pos.str(), 25.0f, 25.0f, 1.0f, glm::vec3(1.0, 0.0f, 0.0f));
+	mFontLoader->drawText("consola", "(C) LearnOpenGL.com", 540.0f, 570.0f, 0.5f, glm::vec3(0, 0.f, 0.9f));
+	
+
+	//mWindow->display();
+	glfwSwapBuffers(mWindow);
 }
 
 void Game::HandleEvents()
 {
-	while (mWindow->pollEvent(mEvent)) {
-		if (mEvent.type == sf::Event::EventType::KeyPressed) {
-			if (mEvent.key.code == sf::Keyboard::Escape) {
-				//Close game when escape is pressed.
-				End();
-			}
-		}
+	glfwPollEvents();
+}
 
 
-		//Close game when x pressedd
-		if (mEvent.type == sf::Event::EventType::Closed) {
-			End();
-		}
-	}
+void Game::SetupInput()
+{
+	mInput.reset(new Input(mWindow));
+	mInput->getMouse()->lockCursor();
+	CloseGameCommand comm;
+	comm.setGame(this);
+	mInput->getKeyboard()->addCommand(256, std::make_unique<CloseGameCommand>(comm));
 }
 
 void Game::Initialize() {
 	//Create window
-	mWindow.reset(new sf::Window());
-	sf::ContextSettings settings;
-	settings.depthBits = 24;
-	settings.stencilBits = 8;
-	settings.antialiasingLevel = 4;
-	settings.majorVersion = 3;
-	settings.minorVersion = 0;
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-	mWindow->create(sf::VideoMode(800, 600), "OpenGL", sf::Style::Default, settings);
+	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+	mWindow = glfwCreateWindow(1280, 720, "OpenGL", nullptr, nullptr);
+	glfwMakeContextCurrent(mWindow);
 	//Setup opengl context
 	glewExperimental = GL_TRUE;
 	glewInit();
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	SetupInput();
+	mFontLoader.reset(new FontLoader());
+	mFontLoader->Load("Fonts/consola.ttf","consola");
+
 	GLuint vertexBuffer;
-	glGenBuffers(1, &vertexBuffer);
-	printf("Testing OpenGL...\n");
-	printf("%u\n", vertexBuffer);
-	glViewport(0, 0, 800, 600);
-	cam = new Camera();
-	tri = new Triangle();
-	tri->cam = cam;
+	glViewport(0, 0, 1280, 720);
+	cam = new Camera(this);
+	//tri = new Triangle();
+	//tri->cam = cam;
+	/*
+	terrain = new Terrain(100.0f, 100.0f, 10, 10);
+	terrain->CreateVertices();
+	terrain->CreateElements();
+	terrain->CreateShader();*/
+	wireframe = new Wireframe();
+	wireframe->cam = cam;
+	wireframe->Initialize();
 }

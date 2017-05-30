@@ -1,17 +1,23 @@
 #pragma once
 #define GLEW_STATIC
 #include <GL/glew.h>
-#include <SFML\Graphics.hpp>
+#include <GLFW/glfw3.h>
+#include <thread>
 #include <memory>
 #include "..\Experiments\Triangle.h"
 #include "Camera.h"
-
-
+#include "../Terrain/Terrain.h"
+#include "../Experiments/Wireframe.h"
+#include <chrono>
+#include "Input/Input.h"
+#include "Text/FontLoader.h"
+typedef std::chrono::time_point<std::chrono::steady_clock> TimePoint;
+typedef std::chrono::steady_clock SClock;
 struct TimeInfo {
 	double timestep;
 	double accumulator;
-	double newTime;
-	double currentTime;
+	TimePoint newTime;
+	TimePoint currentTime;
 	double frameTime;
 	double alpha;
 	double time;
@@ -25,19 +31,20 @@ public:
 	void Initialize();
 	void Start();
 	void End();
+	Input* getInput();
 private:
 	void MainLoop();
-	void Update();
+	void Update(double time, double delta);
 	void Render(double alpha);
 	void HandleEvents();
-
-	sf::Event mEvent;
-	std::unique_ptr<sf::Window> mWindow;
-	sf::RenderStates rStates;
-	sf::Clock mClock;
+	void SetupInput();
+	GLFWwindow* mWindow;
 	TimeInfo mTime;
-	Triangle* tri;
+	//Triangle* tri;
 	Camera* cam;
-
+	Wireframe* wireframe;
+	Terrain* terrain;
+	std::unique_ptr<Input> mInput;
+	std::unique_ptr<FontLoader> mFontLoader;
 };
 

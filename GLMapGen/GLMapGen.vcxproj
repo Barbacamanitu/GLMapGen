@@ -104,13 +104,13 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>SFML_STATIC;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(GLEW_ROOT)\include;$(SFML_ROOT)\include;$(GLM_ROOT);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(GLEW_ROOT)\include;$(GLFW_ROOT)\include;$(GLM_ROOT);$(ProjectDir);$(FREETYPE_ROOT)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>freetype.lib;jpeg.lib;opengl32.lib;winmm.lib;gdi32.lib;sfml-graphics-s-d.lib;sfml-system-s-d.lib;sfml-window-s-d.lib;glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SFML_ROOT)\lib;$(GLEW_ROOT)\lib\Release\x64</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;winmm.lib;gdi32.lib;glew32s.lib;glfw3.lib;freetype28d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(GLFW_ROOT)\lib-vc2015;$(GLEW_ROOT)\lib\Release\x64;$(FREETYPE_ROOT)\objs\vc2010\x64</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -139,12 +139,15 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(GLEW_ROOT)\include;$(GLFW_ROOT)\include;$(GLM_ROOT);$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(GLFW_ROOT)\lib-vc2015;$(GLEW_ROOT)\lib\Release\x64</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;winmm.lib;gdi32.lib;glew32s.lib;glfw3.lib;freetype28.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -152,20 +155,36 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Camera.h" />
+    <ClInclude Include="Engine\Commands\Command.h" />
+    <ClInclude Include="Engine\Commands\CloseGameCommand.h" />
     <ClInclude Include="Engine\Game.h" />
+    <ClInclude Include="Engine\GameObject.h" />
     <ClInclude Include="Engine\GLHelper\ShaderOptions.h" />
     <ClInclude Include="Engine\GLHelper\ShaderProgram.h" />
+    <ClInclude Include="Engine\Input\Input.h" />
+    <ClInclude Include="Engine\Input\KeyboardInput.h" />
+    <ClInclude Include="Engine\Input\MouseInput.h" />
+    <ClInclude Include="Engine\Text\FontFace.h" />
     <ClInclude Include="Experiments\Triangle.h" />
+    <ClInclude Include="Experiments\Wireframe.h" />
+    <ClInclude Include="Engine\Text\FontLoader.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Terrain\Terrain.h" />
     <ClInclude Include="Utility\FileIO.h" />
+    <ClInclude Include="Utility\Math\Geometry.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Camera.cpp" />
     <ClCompile Include="Engine\Game.cpp" />
+    <ClCompile Include="Engine\GameObject.cpp" />
     <ClCompile Include="Engine\GLHelper\ShaderProgram.cpp" />
+    <ClCompile Include="Engine\Input\Input.cpp" />
+    <ClCompile Include="Engine\Input\KeyboardInput.cpp" />
+    <ClCompile Include="Engine\Input\MouseInput.cpp" />
     <ClCompile Include="Experiments\Triangle.cpp" />
+    <ClCompile Include="Experiments\Wireframe.cpp" />
+    <ClCompile Include="Engine\Text\FontLoader.cpp" />
     <ClCompile Include="GLMapGen.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -175,10 +194,15 @@
     </ClCompile>
     <ClCompile Include="Terrain\Terrain.cpp" />
     <ClCompile Include="Utility\FileIO.cpp" />
+    <ClCompile Include="Utility\Math\Geometry.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\shader.fragment" />
     <None Include="Shaders\shader.vertex" />
+    <None Include="Shaders\terrain.fragment" />
+    <None Include="Shaders\terrain.vertex" />
+    <None Include="Shaders\text.fragment" />
+    <None Include="Shaders\text.vertex" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
