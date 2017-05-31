@@ -106,7 +106,7 @@ void Terrain::CreateShader()
 	shaderProgram.reset(new ShaderProgram());
 	*shaderProgram = ShaderProgram::createShader("Shaders/terrain.fragment", "Shaders/terrain.vertex");
 	shaderProgram->Use();
-	shaderProgram->AddUniform("viewProj");
-	shaderProgram->AddVertexAttribute(VertexAttribute("position", AttributeType::Float, 3, 3 * (sizeof(float)), 0));
+	shaderProgram->addUniform("viewProj");
+	shaderProgram->enableVertexAttribute(VertexAttribute("position",3,GL_FLOAT,3,0));
 	int a = 1;
 }

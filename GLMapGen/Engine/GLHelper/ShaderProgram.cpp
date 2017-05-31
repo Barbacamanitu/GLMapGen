@@ -73,23 +73,18 @@ GLuint ShaderProgram::getUniformLocation(std::string uniformName)
 	return mUniforms.at(uniformName);
 }
 
-GLuint ShaderProgram::getAttributeLocation(std::string attributeName)
-{
-	return mAttributes.at(attributeName);
-}
 
-void ShaderProgram::AddUniform(std::string name)
+
+void ShaderProgram::addUniform(std::string name)
 {
 	GLuint uniformLocation = glGetUniformLocation(shaderProgram,name.c_str());
 	mUniforms.insert(std::make_pair(name, uniformLocation));
 }
 
-void ShaderProgram::AddVertexAttribute(VertexAttribute attr)
+void ShaderProgram::enableVertexAttribute(VertexAttribute attr)
 {
-	GLuint attributeLocation = glGetAttribLocation(shaderProgram, attr.name.c_str());
-	mAttributes.insert(std::make_pair(attr.name, attributeLocation));
-	glVertexAttribPointer(attributeLocation, attr.components, GL_FLOAT, GL_FALSE, attr.stride,(void*)attr.offset);
-	glEnableVertexAttribArray(attributeLocation);
+	attr.Location = glGetAttribLocation(shaderProgram, attr.Name.c_str());
+	glVertexAttribPointer(attr.Location, attr.Components, attr.Type, GL_FALSE, attr.Stride, (void*)attr.Offset);
+	glEnableVertexAttribArray(attr.Location);
 }
-
 

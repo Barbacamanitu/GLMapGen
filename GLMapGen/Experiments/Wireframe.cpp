@@ -46,8 +46,8 @@ void Wireframe::CreateShader()
 	shaderProgram.reset(new ShaderProgram());
 	*shaderProgram = ShaderProgram::createShader("Shaders/terrain.fragment", "Shaders/terrain.vertex");
 	shaderProgram->Use();
-	shaderProgram->AddUniform("viewProj");
-	shaderProgram->AddVertexAttribute(VertexAttribute("position", AttributeType::Float, 3, 3 * (sizeof(float)), 0));
+	shaderProgram->addUniform("viewProj");
+	shaderProgram->enableVertexAttribute(VertexAttribute("position",3,GL_FLOAT,3*sizeof(float),0));
 }
 
 void Wireframe::Render()
@@ -57,8 +57,8 @@ void Wireframe::Render()
 	glBindVertexArray(vao);
 	shaderProgram->Use();
 	glm::mat4 mat = cam->proj * cam->view;
-	GLuint viewProj = shaderProgram->getUniformLocation("viewProj");
-	glUniformMatrix4fv(viewProj , 1, GL_FALSE, glm::value_ptr(mat));
+	glUniformMatrix4fv(shaderProgram->getUniformLocation("viewProj"), 1, GL_FALSE, glm::value_ptr(mat));
+	//shaderProgram->setUniform("viewProj", mat);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	glBindTexture(GL_TEXTURE0, 0);
 	glBindVertexArray(0);

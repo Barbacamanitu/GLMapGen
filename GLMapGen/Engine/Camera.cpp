@@ -47,7 +47,8 @@ void Camera::Update(double delta)
 		cameraPos += glm::normalize(glm::cross(direction, cameraUp)) * cameraSpeed;
 	}
 
-	if (movement.length() > 0) {
+	float moveLen = glm::length(movement);
+	if (moveLen > 0) {
 		cameraPos += movement;
 	}
 

@@ -4,7 +4,6 @@
 #include <GLFW/glfw3.h>
 #include <thread>
 #include <memory>
-#include "..\Experiments\Triangle.h"
 #include "Camera.h"
 #include "../Terrain/Terrain.h"
 #include "../Experiments/Wireframe.h"
@@ -40,7 +39,6 @@ private:
 	void SetupInput();
 	GLFWwindow* mWindow;
 	TimeInfo mTime;
-	//Triangle* tri;
 	Camera* cam;
 	Wireframe* wireframe;
 	Terrain* terrain;

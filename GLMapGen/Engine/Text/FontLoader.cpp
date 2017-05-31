@@ -23,9 +23,9 @@ FontLoader::FontLoader()
 	glBindVertexArray(0);
 
 	prog = std::make_unique<ShaderProgram>(ShaderProgram::createShader("Shaders/text.fragment", "Shaders/text.vertex"));
-	prog->AddUniform("projection");
-	prog->AddUniform("text");
-	prog->AddUniform("textColor");
+	prog->addUniform("projection");
+	prog->addUniform("text");
+	prog->addUniform("textColor");
 
 }
 
@@ -102,9 +102,8 @@ void FontLoader::drawText(std::string name, std::string text, GLfloat x, GLfloat
 	glActiveTexture(GL_TEXTURE0);
 	glBindVertexArray(VAO);
 	prog->Use();
-	glUniform3f(prog->getUniformLocation("textColor"), color.x, color.y, color.z);
-	GLuint viewProj = prog->getUniformLocation("projection");
-	glUniformMatrix4fv(viewProj, 1, GL_FALSE, glm::value_ptr(projection));
+	prog->setUniform("textColor", color);
+	prog->setUniform("projection", projection);
 	// Iterate through all characters
 	std::string::const_iterator c;
 	auto Characters = loadedFonts.at(name).Characters;
