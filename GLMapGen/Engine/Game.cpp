@@ -85,7 +85,6 @@ void Game::Render(double alpha)
 	std::stringstream pos;
 	pos << mousePos.x << "," << mousePos.y;
 	mFontLoader->drawText("consola", pos.str(), 25.0f, 25.0f, 1.0f, glm::vec3(1.0, 0.0f, 0.0f));
-	mFontLoader->drawText("consola", "(C) LearnOpenGL.com", 540.0f, 570.0f, 0.5f, glm::vec3(0, 0.f, 0.9f));
 	
 
 	//mWindow->display();

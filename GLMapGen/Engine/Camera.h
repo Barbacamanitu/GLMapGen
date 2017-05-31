@@ -13,5 +13,14 @@ public:
 	glm::mat4 proj;
 	glm::mat4 view;
 	Game* mGame;
+	void setSensitivity(float sens);
+private:
+	float pitch;
+	float yaw;
+	float sensitivity;
+	float cameraSpeed;
+	glm::vec3 direction;
+	glm::vec3 cameraPos;
+	glm::vec3 cameraUp;
 };
 

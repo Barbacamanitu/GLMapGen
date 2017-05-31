@@ -3,16 +3,22 @@
 #include "Game.h"
 Camera::Camera(Game* game)
 {
+
 	mGame = game;
-	glm::vec3 cameraPos = glm::vec3(0.0f, 75.0f, 100.0f);
 	
-	view = glm::lookAt(
-		cameraPos,
-		glm::vec3(0.0f, 0.0f, 0.0f),
-		glm::vec3(0.0f, 1.0f, 0.0f)
-		);
+	
 	//view = glm::translate(view,cameraPos);
 	proj = glm::perspective(glm::radians(45.0f), 1280.0f / 720.0f, 0.1f, 1000.0f);
+	sensitivity = .05f;
+	
+	cameraPos = glm::vec3(0.0f, 75.0f, 100.0f);
+	cameraUp = glm::vec3(0.f, 1.f, 0.f);
+	direction = glm::normalize(cameraPos * -1.0f);
+	view = glm::lookAt(
+		cameraPos,
+		cameraPos + direction,
+		cameraUp);
+	cameraSpeed = .5f;
 }
 
 
@@ -22,32 +28,48 @@ Camera::~Camera()
 
 void Camera::Update(double delta)
 {
-	float speed = delta * 50;	
+	float speed = cameraSpeed * (float)delta;
 	glm::vec3 movement;
-	if (mGame->getInput()->getKeyboard()->isKeyPressed(GLFW_KEY_A)) {
-		movement.x = -speed;
-	}
-
-	if (mGame->getInput()->getKeyboard()->isKeyPressed(GLFW_KEY_D)) {
-		movement.x = speed;
-	}
-
 	if (mGame->getInput()->getKeyboard()->isKeyPressed(GLFW_KEY_W)) {
-		movement.z = speed;
+		cameraPos += cameraSpeed * direction;
 	}
 
 	if (mGame->getInput()->getKeyboard()->isKeyPressed(GLFW_KEY_S)) {
-		movement.z = -speed;
+		cameraPos -= cameraSpeed * direction;
+	}
+
+	if (mGame->getInput()->getKeyboard()->isKeyPressed(GLFW_KEY_A)) {
+		cameraPos -= glm::normalize(glm::cross(direction, cameraUp)) * cameraSpeed;
+
+	}
+
+	if (mGame->getInput()->getKeyboard()->isKeyPressed(GLFW_KEY_D)) {
+		cameraPos += glm::normalize(glm::cross(direction, cameraUp)) * cameraSpeed;
 	}
 
 	if (movement.length() > 0) {
-		view = glm::translate(view, movement);
+		cameraPos += movement;
 	}
 
 	//Mouse
 	glm::vec2 mPos = mGame->getInput()->getMouse()->getMouseDelta();
-	if (mPos.length() > 1) {
-		float lookSpeed = .25;
-		view = glm::rotate(view, glm::radians(mPos.x*(float)delta*lookSpeed), glm::vec3(0, 1, 0));
+	if (mPos.length() > 0) {
+		yaw += mPos.x * sensitivity * (float)delta;
+		pitch += -mPos.y * sensitivity * (float)delta;
+		if (pitch > 89.0f)
+			pitch = 89.0f;
+		if (pitch < -89.0f)
+			pitch = -89.0f;
+		glm::vec3 front;
+		front.x = cos(glm::radians(pitch)) * cos(glm::radians(yaw));
+		front.y = sin(glm::radians(pitch));
+		front.z = cos(glm::radians(pitch)) * sin(glm::radians(yaw));
+		direction = glm::normalize(front);
+		view = glm::lookAt(cameraPos, cameraPos + direction, cameraUp);
 	}
+}
+
+void Camera::setSensitivity(float sens)
+{
+	sensitivity = sens;
 }
