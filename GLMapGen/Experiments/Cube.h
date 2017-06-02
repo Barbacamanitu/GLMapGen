@@ -8,8 +8,10 @@ public:
 	Cube();
 	~Cube();
 	void Initialize();
+	void GenerateGeometry();
 private:
 	VertexArrayObject vao;
+	GLuint vbo;
 	std::shared_ptr<ShaderProgram> shaderProgram;
 };
 

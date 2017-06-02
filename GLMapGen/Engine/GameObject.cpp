@@ -2,9 +2,9 @@
 #include "GameObject.h"
 
 
-GameObject::GameObject(Game* game)
+GameObject::GameObject(World* world)
 {
-	mGame = game;
+	mWorld = world;
 }
 
 
@@ -12,7 +12,7 @@ GameObject::~GameObject()
 {
 }
 
-Game* GameObject::getGame()
+World* GameObject::getWorld()
 {
-	return mGame;
+	return mWorld;
 }

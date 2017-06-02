@@ -75,6 +75,12 @@
     <ClInclude Include="Experiments\Cube.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\AssetManagers\AssetManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\World.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -133,5 +139,7 @@
     <None Include="Shaders\terrain.vertex" />
     <None Include="Shaders\text.vertex" />
     <None Include="Shaders\text.fragment" />
+    <None Include="Shaders\phong.vs" />
+    <None Include="Shaders\phong.fs" />
   </ItemGroup>
 </Project>

@@ -18,7 +18,7 @@ Camera::Camera(Game* game)
 		cameraPos,
 		cameraPos + direction,
 		cameraUp);
-	cameraSpeed = .5f;
+	cameraSpeed = 1.5f;
 }
 
 

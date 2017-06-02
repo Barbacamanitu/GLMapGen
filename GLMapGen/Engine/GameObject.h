@@ -1,13 +1,15 @@
 #pragma once
 #include "Game.h"
+class World;
 class GameObject
 {
 public:
-	GameObject(Game* game);
+	typedef std::unique_ptr<GameObject> PTR;
+	GameObject(World* World);
 	~GameObject();
 private:
-	Game* mGame;
+	World* mWorld;
 protected:
-	Game* getGame();
+	World* getWorld();
 };
 
