@@ -60,9 +60,6 @@
     <ClInclude Include="Engine\Commands\CloseGameCommand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\GameObject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Text\FontLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -79,6 +76,21 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\World.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ECS\Entity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ECS\Component.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ECS\System.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ECS\TestComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ECS\ComponentManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -117,9 +129,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Input\KeyboardInput.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\GameObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Text\FontLoader.cpp">

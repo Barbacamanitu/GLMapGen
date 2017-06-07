@@ -20,9 +20,9 @@ void Game::Start()
 	mTime.newTime = SClock::now();
 	mTime.currentTime = mTime.newTime;
 	mTime.time = 0;
+	shaderManager.add("phong", ShaderProgram::createShader("Shaders/phong.fs", "Shaders/phong.vs"));
 
 	MainLoop();
-
 	
 }
 
@@ -41,7 +41,6 @@ void Game::MainLoop()
 	double t = 0.0;
 	double dt = 1.0/60.0;
 
-	SClock clock;
 	TimePoint currentTime = SClock::now();
 	double accumulator = 0.0;
 
@@ -125,17 +124,9 @@ void Game::Initialize() {
 	mFontLoader.reset(new FontLoader());
 	mFontLoader->Load("Fonts/consola.ttf","consola");
 
-	GLuint vertexBuffer;
 	glViewport(0, 0, 1280, 720);
-	cam = new Camera(this);
-	//tri = new Triangle();
-	//tri->cam = cam;
-	/*
-	terrain = new Terrain(100.0f, 100.0f, 10, 10);
-	terrain->CreateVertices();
-	terrain->CreateElements();
-	terrain->CreateShader();*/
 	wireframe = new Wireframe();
 	wireframe->cam = cam;
 	wireframe->Initialize();
+	world = new World();
 }

@@ -158,8 +158,12 @@
     <ClInclude Include="Engine\Camera.h" />
     <ClInclude Include="Engine\Commands\Command.h" />
     <ClInclude Include="Engine\Commands\CloseGameCommand.h" />
+    <ClInclude Include="Engine\ECS\Component.h" />
+    <ClInclude Include="Engine\ECS\ComponentManager.h" />
+    <ClInclude Include="Engine\ECS\System.h" />
+    <ClInclude Include="Engine\ECS\TestComponent.h" />
     <ClInclude Include="Engine\Game.h" />
-    <ClInclude Include="Engine\GameObject.h" />
+    <ClInclude Include="Engine\ECS\Entity.h" />
     <ClInclude Include="Engine\GLHelper\ShaderProgram.h" />
     <ClInclude Include="Engine\GLHelper\VertexArrayObject.h" />
     <ClInclude Include="Engine\Input\Input.h" />
@@ -179,7 +183,6 @@
   <ItemGroup>
     <ClCompile Include="Engine\Camera.cpp" />
     <ClCompile Include="Engine\Game.cpp" />
-    <ClCompile Include="Engine\GameObject.cpp" />
     <ClCompile Include="Engine\GLHelper\ShaderProgram.cpp" />
     <ClCompile Include="Engine\GLHelper\VertexArrayObject.cpp" />
     <ClCompile Include="Engine\Input\Input.cpp" />

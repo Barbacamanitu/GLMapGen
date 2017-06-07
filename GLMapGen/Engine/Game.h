@@ -10,6 +10,8 @@
 #include <chrono>
 #include "Input/Input.h"
 #include "Text/FontLoader.h"
+#include "AssetManagers/AssetManager.h"
+#include "World.h"
 typedef std::chrono::time_point<std::chrono::steady_clock> TimePoint;
 typedef std::chrono::steady_clock SClock;
 struct TimeInfo {
@@ -44,5 +46,7 @@ private:
 	Terrain* terrain;
 	std::unique_ptr<Input> mInput;
 	std::unique_ptr<FontLoader> mFontLoader;
+	AssetManager<ShaderProgram> shaderManager;
+	World* world;
 };
 

@@ -9,6 +9,8 @@ public:
 
 	PTR add(std::string name, T& asset) {
 		mAssets.insert(std::make_pair(name,std::make_shared<T>(asset)));
+		return mAssets.at(name);
+		
 	}
 
 	PTR add(std::string name, PTR assetPtr) {

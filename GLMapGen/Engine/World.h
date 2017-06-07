@@ -1,19 +1,16 @@
 #pragma once
 #include <vector>
-#include "GameObject.h"
-#include <memory>
+#include "ECS/ComponentCollection.h"
+#include "ECS/System.h"
+#include "ECS/TestComponent.h"
 
 class World {
 public:
-	typedef std::vector<std::unique_ptr<GameObject>> GameObjectList;
-	GameObject* createGameObject() {
-		mGameObjects.emplace_back(new GameObject(this));
-		return mGameObjects.back().get();
-	}
-
-	GameObjectList const & getGameObjects() {
-		return mGameObjects;
+	World() {
+		TestComponent* tComp = testComponents.createComponent();
+		testSystem.addCollection(&testComponents);
 	}
 private:
-	std::vector<GameObject::PTR> mGameObjects;
+	ComponentCollection<TestComponent> testComponents;
+	System<TestComponent> testSystem;
 };
